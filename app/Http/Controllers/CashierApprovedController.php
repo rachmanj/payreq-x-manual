@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Cashier\TransaksiController;
 use App\Models\Account;
 use App\Models\Outgoing;
 use App\Models\Payreq;
@@ -31,6 +32,9 @@ class CashierApprovedController extends Controller
         $outgoing = app(OutgoingController::class)->store($request);
 
         $this->payreqStatusUpdate($payreq, $outgoing);
+
+        // create transaksi
+        app(TransaksiController::class)->store('outgoing', $outgoing);
 
         /*
         if ($payreq->type === 'advance') { // if payreq type is 'advance'
@@ -105,27 +109,22 @@ class CashierApprovedController extends Controller
 
         $outgoings = Outgoing::where('payreq_id', $id)->get();
 
+        // create transaksi
+        app(TransaksiController::class)->store('outgoing', $outgoing);
+
+        // update app_balance in account table
+        $response = app(AccountController::class)->outgoing($request->amount);
+
+        if (!$response) {
+            return redirect()->route('cashier.approveds.pay', $id)->with('error', 'Account not found!');
+        }
 
         // update payreq status
         if ($payreq->amount == $outgoings->sum('amount')) {
-
-            // update app_balance in account table
-            $response = app(AccountController::class)->outgoing($request->amount);
-
-            if (!$response) {
-                return redirect()->route('cashier.approveds.pay', $id)->with('error', 'Account not found!');
-            }
-
             $this->payreqStatusUpdate($payreq, $outgoing);
+
             return redirect()->route('cashier.approveds.pay', $id)->with('success', 'Payreq successfully paid in full');
         } else {
-            // update app_balance in account table
-            $response = app(AccountController::class)->outgoing($request->amount);
-
-            if (!$response) {
-                return redirect()->route('cashier.approveds.pay', $id)->with('error', 'Account not found!');
-            }
-
             $payreq->status = 'split';
             $payreq->printable = 0;
             $payreq->save();

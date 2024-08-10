@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Cashier\TransaksiController;
 use App\Models\Incoming;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,9 @@ class CashierIncomingController extends Controller
         $incoming->receive_date = $request->receive_date;
         $incoming->cashier_id = auth()->user()->id;
         $incoming->save();
+
+        // create transaksi
+        app(TransaksiController::class)->store('incoming', $incoming);
 
         // update app_balance in accounts table
         app(AccountController::class)->incoming($incoming->amount);

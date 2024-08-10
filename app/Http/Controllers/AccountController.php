@@ -146,7 +146,7 @@ class AccountController extends Controller
     {
         $userRoles = app(UserController::class)->getUserRoles();
 
-        if (in_array(['superadmin', 'admin', 'cashier'], $userRoles)) {
+        if (array_intersect(['superadmin', 'admin', 'cashier'], $userRoles)) {
             $accounts = Account::orderBy('account_number', 'asc')
                 ->get();
         } else {

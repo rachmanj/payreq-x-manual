@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Cashier\CashierModalController;
+use App\Http\Controllers\Cashier\TransaksiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CashierApprovedController;
 use App\Http\Controllers\CashierOutgoingController;
@@ -65,6 +66,13 @@ Route::prefix('cashier')->name('cashier.')->group(function () {
         Route::post('/store', [CashierModalController::class, 'store'])->name('store');
         Route::get('/', [CashierModalController::class, 'index'])->name('index');
         Route::put('/{id}/receive', [CashierModalController::class, 'receive'])->name('receive');
+    });
+
+    // TRANSAKSIS
+    Route::prefix('transaksis')->name('transaksis.')->group(function () {
+        Route::get('/data', [TransaksiController::class, 'data'])->name('data');
+        Route::get('/', [TransaksiController::class, 'index'])->name('index');
+        Route::post('/store', [TransaksiController::class, 'store'])->name('store');
     });
 
     Route::prefix('pcbc')->name('pcbc.')->group(function () {

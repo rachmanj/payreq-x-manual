@@ -1,11 +1,11 @@
 @extends('templates.main')
 
 @section('title_page')
-    Outgoing Payment Request
+  TX HISTORY  
 @endsection
 
 @section('breadcrumb_title')
-    outgoings
+    transaksi
 @endsection
 
 @section('content')
@@ -14,34 +14,29 @@
 
     <div class="card">
       <div class="card-header">
-        {{-- @can('create_outgoing')
-        <a href="{{ route('cashier.outgoings.create') }}" class="btn btn-sm btn-primary float-right"> New Outgoing</a>
-        @endcan --}}
-      </div>
-      <!-- /.card-header -->
+        <h3 class="card-title">Account No: {{ $account->account_number }} - {{ $account->account_name }}</h3>
+      </div>  <!-- /.card-header -->
+     
       <div class="card-body">
-        <table id="outgoings" class="table table-bordered table-striped">
+        <table id="transaksis" class="table table-bordered table-striped">
           <thead>
           <tr>
-            <th>#</th>
-            <th>Employee</th>
-            <th>Payreq No</th>
-            <th>Payment Date</th>
-            <th>IDR</th>
-            <th>Account</th>
-            <th></th>
+            <th class="text-right">#</th>
+            <th class="text-center">Create at</th>
+            <th class="text-center">PostD</th>
+            <th class="text-center">Type</th>
+            <th class="text-center">Desc</th>
+            <th class="text-right">Debit</th>
+            <th class="text-right">Credit</th>
+            <th class="text-right">Balance</th>
+            {{-- <th></th> --}}
           </tr>
           </thead>
         </table>
-      </div>
-      <!-- /.card-body -->
-    </div>
-    <!-- /.card -->
-  </div>
-  <!-- /.col -->
-</div>
-<!-- /.row -->
-
+      </div> <!-- /.card-body -->
+    </div> <!-- /.card -->
+  </div> <!-- /.col -->
+</div>  <!-- /.row -->
 @endsection
 
 @section('styles')
@@ -50,9 +45,6 @@
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('adminlte/plugins/datatables/css/datatables.min.css') }}"/>
-  <!-- Select2 -->
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 
 @section('scripts')
@@ -62,44 +54,37 @@
 <script src="{{ asset('adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/datatables/datatables.min.js') }}"></script>
-<!-- Select2 -->
-<script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 
 <script>
   $(function () {
-    $("#outgoings").DataTable({
+    $("#transaksis").DataTable({
       processing: true,
       serverSide: true,
-      ajax: '{{ route('cashier.outgoings.data') }}',
+      ajax: '{{ route('cashier.transaksis.data') . '?account_id=' . $account->id }}',
       columns: [
-        {data: 'DT_RowIndex', orderable: false, searchable: false},
-        {data: 'employee'},
-        {data: 'payreq_no'},
-        {data: 'outgoing_date'},
-        {data: 'amount'},
-        {data: 'account'},
-        {data: 'action', orderable: false, searchable: false},
+        // {data: 'DT_RowIndex', orderable: false, searchable: false},
+        {data: 'id'},
+        {data: 'created_at'},
+        {data: 'posting_date'},
+        {data: 'document_type'},
+        {data: 'description'},
+        {data: 'debit'},
+        {data: 'credit'},
+        {data: 'row_balance'},
+        // {data: 'action', orderable: false, searchable: false},
       ],
       fixedHeader: true,
       columnDefs: [
               {
-                "targets": [2],
+                "targets": [1, 2, 3],
                 "className": "text-center"
               },
               {
-                "targets": [4],
+                "targets": [0, 5, 6],
                 "className": "text-right"
               }
             ]
     })
   });
-</script>
-<script>
-  $(function () {
-    //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
-  }) 
 </script>
 @endsection
