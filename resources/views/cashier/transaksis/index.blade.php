@@ -62,8 +62,8 @@
       serverSide: true,
       ajax: '{{ route('cashier.transaksis.data') . '?account_id=' . $account->id }}',
       columns: [
-        // {data: 'DT_RowIndex', orderable: false, searchable: false},
-        {data: 'id'},
+        {data: 'DT_RowIndex', orderable: false, searchable: false},
+        //{data: 'id'},
         {data: 'created_at'},
         {data: 'posting_date'},
         {data: 'document_type'},
