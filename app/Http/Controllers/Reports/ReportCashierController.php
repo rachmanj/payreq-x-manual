@@ -48,11 +48,12 @@ class ReportCashierController extends Controller
                 ->where('receiver', auth()->user()->id)
                 ->where('status', 'close')
                 ->where('date', date('Y-m-d'))
-                ->first();
+                ->first()
+                ->receive_amount;
         }
 
         if ($today_terima_modal) {
-            return $today_terima_modal->receive_amount;
+            return $today_terima_modal;
         } else {
             return 0;
         }
