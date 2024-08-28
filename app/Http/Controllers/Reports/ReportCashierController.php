@@ -39,14 +39,14 @@ class ReportCashierController extends Controller
 
         if (array_intersect(['superadmin', 'admin', 'approver'], $userRoles)) {
             $today_terima_modal = CashierModal::where('type', 'bod')
-                ->where('status', 'close')
+                // ->where('status', 'close')
                 ->where('date', date('Y-m-d'))
                 ->get()
                 ->sum('receive_amount');
         } else {
             $today_terima_modal = CashierModal::where('type', 'bod')
                 ->where('receiver', auth()->user()->id)
-                ->where('status', 'close')
+                // ->where('status', 'close')
                 ->where('date', date('Y-m-d'))
                 ->first()
                 ->receive_amount;
